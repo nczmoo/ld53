@@ -153,7 +153,7 @@ class UI{
 			if (topic == game.config.chosenTopic){
 				btnClass = ' btn-secondary ';
 			}			
-			txt += "<div class='col'><button id='topic-" 
+			txt += "<div class='col p-3'><button id='topic-" 
 				+ i + "' class='verb1 btn " + btnClass 
 				+ " form-control btn-lg p-3'>" 
 				+ topic + "</button></div>";
