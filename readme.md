@@ -19,12 +19,18 @@ TODO
     x have more natural identities as topics
     x parishioners in the front have more violent responses than those in the back
     x have players who trust you sit closer
-    show previous responses when you click on stuff you've already clicked on
-    add more names
+    x show previous responses when you click on stuff you've already clicked on
+    x add more names
+    refactor
+    x show what people believe in after you've talked about a topic
+
+
 QUESTIONS
     Should demographic info be clear?
-
+        idk what this means
     How can I create an incentive for players to want to invest into topics?
+
+    How can I create more player agency for people to manipulate their audience to THEIR beliefs?
 
 DESIGN
     sermon delivery
@@ -58,11 +64,10 @@ DESIGN
         "Courier Chaos": A real-time strategy game where players manage a team of couriers, assigning deliveries, optimizing routes, and dealing with unexpected challenges along the way.
         "Delivery Duck": A puzzle game where players control a duck, delivering messages and packages to other ducks while avoiding predators and obstacles.
         Freestyle Rhythm Game - write a freestyle rap and then you basically have to do a rhythm game where each rhythme you have to connect with two buttons on beat.
-        packet delivery
-        
+        packet delivery    
 
 MAYBE
     You can get to know people before the sermon.
-    when a person has an emotional response, a person seated next to them having a similar response amplifies it.
-    
+    when a person has an emotional response, a person seated next to them having a similar response amplifies it.    
     create a second set of green / red for polarity section so players can see where they're at
+    maybe as you're talking positively and negatively about these topics, you inspire your parish to do actual events outside of church.

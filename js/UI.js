@@ -1,35 +1,36 @@
 class UI{	
 	logs = [];
+	
+	nave = new UINave();
 	polarizing = false;
-	constructor(){
+	profile = new UIProfile();
+	topicLogs = {};
+	turnLogs = [];
 
+	constructor(){
+		for (let topic of Topic.list){
+			this.topicLogs[topic] = [];
+		}
 	}
+	
 	refresh(){
 		$("#chosenTopic").html(game.config.chosenTopic);
 		$("#centSermon").html( Math.round(game.config.turns / game.config.maxTurns * 100) + "%")
-		$("#sermonNum").html(game.config.sermonNum);
-		this.printNave();
+		$("#sermonNum").html(Config.sermonNum);
+		$("#parishSize").html(game.config.parishSize);
+		$("#faith").html(Config.faith);
+		this.nave.print();
 		this.printMenu();
-		if (this.logs.length > 0 && $("#log").hasClass('d-none')){
+		this.printLog();		
+		if (this.turnLogs.length > 0 && $("#turnLogs").hasClass('d-none')){
 			$('.log').removeClass('d-none');
 		}
 		let txt = '';
-		for (let  log of this.logs){
-			txt += "<div class='p-1'>" + log + "</div>";
+		for (let  log of this.turnLogs){
+			txt += "<div class='p-3'>" + log + "</div>";
 		}
-		$("#log").html(txt);
+		$("#turnLogs").html(txt);
 		this.resetMenu();
-	}
-
-	fetchDelta(seatID){
-		let personID = game.config.seats[seatID];
-		let person = game.config.congregation[personID];
-		if (person.delta > 0){
-			return "&uarr;";
-		} else if (person.delta < 0){
-			return "-";
-		}
-		return "&nbsp;";
 	}
 
 	fetchPplCaption(n){
@@ -40,116 +41,43 @@ class UI{
 		return txt;
 	}
 
-	fetchSeatClass(seatID){
-		let personID = game.config.seats[seatID];
-		let person = game.config.congregation[personID];
-
-		if (game.config.chosenTopic == null && person.delta == 0){
-			return ' filled ';
-		} 
-		if (game.config.chosenTopic == null && person.delta > 0){
-			return ' filled-pos ';
-		}
-
-		if (game.config.chosenTopic == null && person.delta < 0){
-			return ' filled-neg ';
-		}
-
-		if (game.config.chosenTopic != null && game.config.likeOrDislike == null){
-			return this.fetchTopicOpinionClass(seatID);
-		}
-
-		let polarity = this.fetchTopicPolarity(seatID);		
-		return polarity;
-	}
-
-	fetchTopicOpinionClass(seatID){
-		let personID = game.config.seats[seatID];
-		let person = game.config.congregation[personID];
-		let opinion = person.opinions[game.config.chosenTopic];
-		if (opinion == 0){
-			return ' neutral ';
-		}
-		if (opinion > 0){
-			return ' positive ';
-		}
-		return ' negative ';
-	}
-
-	fetchTopicPolarity(seatID){
-		let personID = game.config.seats[seatID];
-		let person = game.config.congregation[personID];
-		let opinion = person.opinions[game.config.chosenTopic];
-		if (opinion == 0){
-			return ' neutral ';
-		}
-		if ((opinion > 0 && game.config.likeOrDislike == 'like') 
-			|| (opinion < 0 && game.config.likeOrDislike == 'dislike')){
-			return ' positive ';
-		}
-		return ' negative ';
-	}
-
 	formatID(id){
 		return Number(id) + 1;
 	}
 
 	log(msg){
 		this.logs.unshift(msg);
+		this.turnLogs.unshift(msg);
 	}
 
-	printNave(){
+	printLog(){
 		let txt = '';
-		for (let i = game.config.numOfSeats - 1; i >= 0;  i --){
-			if ((i + 1) % Config.numOfSeatsInRow == 0){				
-				txt += "<div class='text-center'>";
-			}
-			let caption = '&nbsp;', filled = '';
-			if (game.config.seats[i] != null){
-				filled = this.fetchSeatClass(i);	
-				caption = this.fetchDelta(i);
-			}
-			txt += "<div id='seat-" + i + "' class='fw-bold verb1 cell text-center fs-4 " + filled + "'>" + caption + "</div>";
-			if ((i + 1) % Config.numOfSeatsInRow == 1){				
-				txt += "</div>";
-			}
+		for (let  log of this.logs){
+			txt += "<div class='p-1'>" + log + "</div>";
 		}
-		$("#nave").html(txt);
+		$("#logList").html(txt);
 	}
 
 	printMenu(){
+		$("#topicClick").addClass('d-none');
+
 		if (!this.polarizing){
-			this.printSermonMenu();
+			this.printSermonMenu();			
+			if (game.config.chosenTopic != null){				
+				$("#topicClick").removeClass('d-none');
+			}
 			return;
 		}
 		$("#menu").addClass('d-none');
-		$("#polarMenu").removeClass('d-none');
-		
+		$("#polarMenu").removeClass('d-none');		
 	}
-
-	printProfile(personID){
-		let fills = ['gender', 'race', 'sexuality', 'affiliation'];
-		let txt = '';
-		let person = game.config.congregation[personID];
-		$("#profile-name").html(person.name);		
-		for (let fill of fills){
-			txt += person[fill] + " / ";
-		}
-		$("#profile-demographics").html(txt);
-		txt = '';
-		for (let i in person.logs){
-			let log = person.logs[i];
-			txt += "<div>" + log + "</div>";
-		}
-		$("#profile-log").html(txt);
-	}
-
+	
 	printSermonMenu(){
 		let txt = '';
 
 		for (let i in game.config.sermonTopics){
 			let topic = game.config.sermonTopics[i];
-			let btnClass = ' btn-primary ';
+			let btnClass = ' btn-outline-secondary ';
 			if (topic == game.config.chosenTopic){
 				btnClass = ' btn-secondary ';
 			}			
@@ -159,7 +87,18 @@ class UI{
 				+ topic + "</button></div>";
 			
 		}
-		$("#menu").html(txt);
+		$("#topicMenu").html(txt);
+	}
+
+	printTopicLogs(topic){
+		let txt = "<div class='fw-bold'> Last time you talked about this topic...</div>";
+		for (let  log of this.topicLogs[topic]){
+			txt += "<div class='p-3'>" + log + "</div>";
+		}
+		if (this.topicLogs[topic].length < 1){
+			txt = "<div class='fw-bold'>This is your first time talking about this.</div>";
+		}
+		$("#topicLogs").html(txt);
 	}
 
 	resetMenu(){
