@@ -36,7 +36,7 @@ class Config {
         }        
     }
 
-    assignSeats(){        
+    assignSeats(){       
         if (Config.activeRows <= this.numOfRows && Config.maxTrust > Config.activeRows){
             Config.activeRows = Config.maxTrust;
             if (Config.activeRows > this.numOfRows){
@@ -50,7 +50,7 @@ class Config {
                 continue;
             }
             let row = Math.round(Config.activeRows + 1 - person.trust / Config.maxTrust * Config.activeRows);            
-            if (person.trust < 0){
+            if (person.trust < 0 || person.trust == 0 ){
                 row = Config.activeRows;
             }
             if (row > this.numOfRows){
@@ -73,7 +73,7 @@ class Config {
         }
     }
 
-    fetchRandSeatInRow(row){        
+    fetchRandSeatInRow(row){    
         let generated = [];
         if (row == null){
             return this.fetchRandSeat();

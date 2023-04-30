@@ -23,8 +23,8 @@ TODO
     x add more names
     refactor
     x show what people believe in after you've talked about a topic
-
-
+    the more sermons they've attended, the more they trust you
+    
 QUESTIONS
     Should demographic info be clear?
         idk what this means

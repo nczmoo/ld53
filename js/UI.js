@@ -77,7 +77,7 @@ class UI{
 
 		for (let i in game.config.sermonTopics){
 			let topic = game.config.sermonTopics[i];
-			let btnClass = ' btn-outline-secondary ';
+			let btnClass = ' btn-outline-dark ';
 			if (topic == game.config.chosenTopic){
 				btnClass = ' btn-secondary ';
 			}			

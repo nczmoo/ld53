@@ -80,7 +80,6 @@ class UINave {
 				*/
 				caption = "<img " + poop + " seat' src='img/" + this.fetchSeatClass(i) + ".png'>";
             }
-			console.log(caption);
             rowTxt = "<div class='cell'>" + caption + "</div>" + rowTxt;
             if ((i + 1) % Config.numOfSeatsInRow == 1){				
                 txt += rowTxt + "</div>";

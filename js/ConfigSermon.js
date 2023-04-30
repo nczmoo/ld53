@@ -73,25 +73,29 @@
         for (let topic of game.config.prevTopics){
             txt += topic + ",  ";
         }                
-        let high = null, growing = [], lostInterest = 0;
+        let high = 0, growing = [], lostInterest = 0;
         for (let personID in game.config.congregation){
             let person = game.config.congregation[personID];
-            person.reset();
             if (!person.quited && person.trust < 0){
                 person.leave();
                 person.quit();                             
                 lostInterest++;
             }
+            if (!person.quited && person.inviting){
+                growing.push(personID);            
+            }
+            person.reset();
             if (person.quited || person.trust <= Config.maxTrust){
                 continue;
             }
-            growing.push(personID);            
             if (person.trust > high){
                 high = person.trust;
             }
+            
         }
-        
-        Config.maxTrust = high;
+        if (high > Config.maxTrust){
+            Config.maxTrust = high;
+        }
         let growthCaption = '', leavingCaption = '', lostCaption = '';
         if (growing.length > 0){
             
@@ -101,12 +105,12 @@
         if (game.config.leaving > 0){
             leavingCaption = game.config.leaving + " " 
                 + ui.fetchPplCaption(game.config.leaving) 
-                + " people left because you offended them.  ";
+                + " left because you offended them.  ";
         }
         if (lostInterest > 0){
-            lostCaption = lostInterest + " people look like they might not be coming back... ";
+            lostCaption = lostInterest + " " + ui.fetchPplCaption(lostInterest)  + " looks like they might not be coming back... ";
         }
-        let msg = "You finished sermon #" + Config.sermonNum + " to " + game.config.parishSize + "  people. (" + txt + ") ";
+        let msg = "You finished sermon #" + Config.sermonNum + " to " + game.config.parishSize + "  people. ";
         ui.log(msg + growthCaption + leavingCaption + lostCaption);
         if (growing.length > 0){
             game.config.addToCongregation(growing.length);
@@ -127,8 +131,6 @@
         } else {
             game.config.assignSeats();
         }
-        
-
     }
 
     

@@ -1,7 +1,9 @@
 class Person {
     config = new PersonConfig();
     avg = null;
+    attended = 1;
     id = null;
+    inviting = false;
     logs = [];
     delta = 0;
     name = null;
@@ -68,8 +70,11 @@ class Person {
       }
 
       agree(topic, row){
-        
-        let caption = '', delta = randNum(0, Config.activeRows + 1 - row);
+        let min = 0, max = Config.activeRows - row + this.attended; // add 1 if you removed this.attended
+        if (min > max){
+          min = max - 1;
+        }
+        let caption = '', delta = randNum(min, max);
         this.changeTrust(delta);
         if (delta > 0){
             caption = " They trust you more now! (+" + delta + ") ";
@@ -84,11 +89,17 @@ class Person {
       changeTrust(delta){
         this.trust += delta;
         this.delta += delta;
-        console.log(this.name, this.trust, this.delta);
+        if (this.trust > Config.maxTrust){
+          this.inviting = true;
+        }
       }
 
       disagree(topic, row){
-        let caption = '', delta = randNum(0, (Config.activeRows + 1 - row) * 3);
+        let min = 0, max = ((Config.activeRows + 1 - row) * 3) - this.attended;
+        if (max < 2){
+          max = 1;
+        }
+        let caption = '', delta = randNum(min, max);
         this.changeTrust(-delta);
         if (delta > 0){
             caption = " They trust you less now! (-" + delta + ")";
@@ -179,6 +190,8 @@ class Person {
 
       reset(){
         this.delta = 0;
+        this.attended++;
+        this.inviting = false;
       }
 
       sit(seatID){        
